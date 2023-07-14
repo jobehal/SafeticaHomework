@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32126.317
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FooterEditor", "FooterEditor\FooterEditor.csproj", "{46D0039D-BD28-4871-9BFF-28A19601DB06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test_FooterEditor", "Test_FooterEditor\Test_FooterEditor.csproj", "{C239B879-BFAE-4FCE-A2DE-D844B6852D12}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{46D0039D-BD28-4871-9BFF-28A19601DB06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46D0039D-BD28-4871-9BFF-28A19601DB06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46D0039D-BD28-4871-9BFF-28A19601DB06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46D0039D-BD28-4871-9BFF-28A19601DB06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C239B879-BFAE-4FCE-A2DE-D844B6852D12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C239B879-BFAE-4FCE-A2DE-D844B6852D12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C239B879-BFAE-4FCE-A2DE-D844B6852D12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C239B879-BFAE-4FCE-A2DE-D844B6852D12}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B510563-EB47-44AB-AB58-B5F507522DD3}
+	EndGlobalSection
+EndGlobal
