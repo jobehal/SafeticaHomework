@@ -1,3 +1,3 @@
 # SafeticaHomework
 
-File footer editor
+File footer editor.
