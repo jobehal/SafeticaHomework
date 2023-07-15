@@ -4,15 +4,21 @@ namespace FooterEditor
 {
     public class Footer : IFooter
     {
+
         private Dictionary<string, string> _properties = new Dictionary<string, string>();
+        public Dictionary<string, string> Properties { get => _properties;}
         private string _lineSep = "\n";
         private string _propValSep = "=";
         private Tuple<string, string> _nameSep = Tuple.Create("[","]");
         
         private string _defaultName = "SafeticaProperties";
-        public string? Name { get; private set;}
+        
         public Footer(string footerStr)
         {
+            if (string.IsNullOrWhiteSpace(footerStr))
+            {
+                throw new ArgumentNullException("Input is null or empty");
+            }
             ParseInput(footerStr);
         }
 
@@ -26,7 +32,7 @@ namespace FooterEditor
                 {
                     if (rowIndex == 0)
                     {
-                        ExtractName(line);
+                        CheckFooterName(line);
                     }
                     else
                     {
@@ -45,27 +51,25 @@ namespace FooterEditor
             }
         }
 
-        private void ExtractName(string text)
+        private void CheckFooterName(string text)
         {
-            string pattern = $@"\{_nameSep.Item1}(.*?)\{_nameSep.Item2}";
-            Match match = Regex.Match(text, pattern);
-
-            if (match.Success)
+            if (!text.Contains(_defaultName))
             {
-                Name = match.Groups[1].Value;
-            }
-            else
-            {
-                Name = _defaultName;
-                Console.WriteLine($"Unable to extract footer name from '{text}' default footer name is set.");
+                throw new ArgumentException("Input does not contains required head.");
             }
         }
 
         public void AddProperty(string prop, string value)
         {
+            if (string.IsNullOrWhiteSpace(prop))
+            {
+                Console.WriteLine("Prop Name is not defined");
+                return;
+            }
+            
             if (!_properties.ContainsKey(prop))
             {
-                _properties.Add(prop, value);
+                _properties.Add(prop.Trim(), value);
             }
             else
             {
@@ -74,20 +78,21 @@ namespace FooterEditor
         }
 
         public void EditPropety(string prop, string value)
-        {
-            if (_properties.ContainsKey(prop))
+        {   
+            string trimmedProp = prop.Trim();
+            if (_properties.ContainsKey(trimmedProp))
             {
-                _properties[prop] = value;
+                _properties[trimmedProp] = value;
             }
             else
             {
-                AddProperty(prop, value);
+                AddProperty(trimmedProp, value);
             }
         }
 
         public void RemoveProperty(string prop)
         {
-            _properties.Remove(prop);
+            _properties.Remove(prop.Trim());
         }
 
         public override string ToString()
@@ -101,7 +106,7 @@ namespace FooterEditor
             }
             else
             {
-                string nameStr = $"{_nameSep.Item1}{Name}{_nameSep.Item2}{_lineSep}";
+                string nameStr = $"{_nameSep.Item1}{_defaultName}{_nameSep.Item2}{_lineSep}";
                 return $"{nameStr}{propsString}";
             }
 
