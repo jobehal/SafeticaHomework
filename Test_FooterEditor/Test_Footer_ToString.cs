@@ -23,7 +23,7 @@ namespace Test_FooterEditor
 
             string result = footer.ToString();
 
-            Assert.Equal("", result);
+            Assert.Equal(FooterInputs.headTag+"\n", result);
         }
 
         [Fact]
