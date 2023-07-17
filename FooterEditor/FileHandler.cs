@@ -82,19 +82,26 @@ namespace FooterEditor
         
         public Tuple<int, string> SplitBySubstring(string inputString, string searchTag)
         {
-            int index = inputString.LastIndexOf(searchTag);
+            int index = -1;
+            if (!string.IsNullOrWhiteSpace(inputString) && !string.IsNullOrWhiteSpace(searchTag))
+            {
+                index = inputString.LastIndexOf(searchTag);
+            }
+
             string? substring = null;
+            int byteIndex = 0;
             if (index != -1)
             {
                 string fullsubstring = inputString.Substring(index, inputString.Length-index);
-                index = GetBytes(fullsubstring).Length;
+                byteIndex = GetBytes(fullsubstring).Length;
                 substring = fullsubstring.Trim();
             }
             else
             {
+                //TODO CHECK THIS MESSAGE OCCURS
                 Console.WriteLine("Search tag not found");                                
             }
-            return Tuple.Create(index, substring);
+            return Tuple.Create(byteIndex, substring);
 
         }
 
@@ -102,9 +109,7 @@ namespace FooterEditor
         {   
             if (!CanAccessFile)
             {
-                //TODO exception
-                Console.WriteLine("Unable to write to the file. No changes would be made.");
-                return;
+                throw new IOException("Unable to write to the file. No changes would be made.");                
             }
             startPossition = _fileInfo.Length <= startPossition ? 0 : startPossition;
             using (FileStream fs = new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.Write, FileShare.None))

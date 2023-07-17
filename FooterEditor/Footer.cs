@@ -4,7 +4,6 @@ namespace FooterEditor
 {
     public class Footer : IFooter
     {
-
         private Dictionary<string, string> _properties = new Dictionary<string, string>();
         public Dictionary<string, string> Properties { get => _properties;}
         private string _lineSep;
