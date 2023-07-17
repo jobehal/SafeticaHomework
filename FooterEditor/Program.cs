@@ -1,26 +1,24 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-Console.WriteLine("xxx");
-
-
-string actionName  = null;
-actionName  = "add";
-actionName  = "edit";
-//actionName  = "remove";
-string fileName    = @"E:\Projekty2\SafeticaHomework\Test_FooterEditor\LongTestFile.txt";
-string val = new string('a', 2000);
-string propValPair = $"property3={val}";
-
-try
+﻿if (args.Length != 3)
 {
-    IFileFooterEditor fileFooterEditor = new FileFooterEditor(fileName, actionName, propValPair);
-    fileFooterEditor.Execute();
+    Console.WriteLine("Invalid arguments count");
 }
-catch (Exception ex)
+else
 {
-    Console.WriteLine("Err:");
-    Console.WriteLine(ex.Message);
-    Console.WriteLine("Press any key to continue...");
-    Console.ReadKey();
+    string actionName  = args[0];
+    string fileName    = args[1];    
+    string propValPair = args[2];
+
+    try
+    {
+        IFileFooterEditor fileFooterEditor = new FileFooterEditor(fileName);
+        fileFooterEditor.Execute(actionName, propValPair);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Err:");
+        Console.WriteLine(ex.Message);
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();
+    }
 }
 

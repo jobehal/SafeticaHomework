@@ -400,3 +400,10 @@ FodyWeavers.xsd
 *_new.txt
 Test_FooterEditor/LockedFile.txt
 Test_FooterEditor/TestFiles/LockedTestFile.txt
+*_prog.txt
+*_prog_add.txt
+*_prog_edit_existing.txt
+*_prog_remove_existing.txt
+*_prog_remove_nonexisting.txt
+
+

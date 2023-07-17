@@ -39,12 +39,10 @@ public class FileFooterEditor : IFileFooterEditor
         }
     }
 
-    public FileFooterEditor(string fileName, string actionName, string propValPair)
+    public FileFooterEditor(string fileName)
     {
             reader = new FileHandler(fileName);
-            this.actionName = actionName;
 
-            this.propValPair = propValPair.Split("=");
     }  
     
     private void CallAction(IFooter footer) 
@@ -61,13 +59,17 @@ public class FileFooterEditor : IFileFooterEditor
                 footer.RemoveProperty(Property);                
                 break;
             default:
-                Console.WriteLine("Invalid operation.");
+                throw new ArgumentException("Invalid operation.");
                 break;
         }
     }
         
-    public void Execute()
+    public void Execute(string actionName, string propValPair)
     {
+        //set parameters
+        this.actionName = actionName;
+        this.propValPair = propValPair.Split("=");
+
         string endBytes = reader.ReadFromEnd(footerMaxLenght);
 
         Tuple<int, string> splited = reader.SplitBySubstring(endBytes, footerHeadTag);
@@ -84,7 +86,7 @@ public class FileFooterEditor : IFileFooterEditor
         }
         else
         {
-            Console.WriteLine("Footer is too long. No change will be made");
+            throw new ArgumentException("Footer is too long. No change will be made");
         }
     }
 
