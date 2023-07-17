@@ -26,7 +26,7 @@ namespace FooterEditor
         {
             if (!CanAccessFile)
             {
-                throw new IOException("Can not read the file.");                
+                throw new IOException($"Can not read the file. {_fileInfo.FullName}");                
             }
 
             using (FileStream fs = new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -95,20 +95,14 @@ namespace FooterEditor
                 byteIndex = GetBytes(fullsubstring).Length;
                 substring = fullsubstring.Trim();
             }
-            else
-            {
-                //TODO CHECK THIS MESSAGE OCCURS
-                Console.WriteLine("Search tag not found");                                
-            }
             return Tuple.Create(byteIndex, substring);
-
         }
 
         public void WriteToEnd(string content, int startPossition)
         {   
             if (!CanAccessFile)
             {
-                throw new IOException("Unable to write to the file. No changes would be made.");                
+                throw new IOException($"Unable to write to the file {_fileInfo.FullName}.\n No changes would be made.");                
             }
             startPossition = _fileInfo.Length <= startPossition ? 0 : startPossition;
             using (FileStream fs = new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.Write, FileShare.None))
@@ -120,7 +114,6 @@ namespace FooterEditor
                 
                 fs.Write(bytesToWrite, 0, bytesToWrite.Length);
             }
-
         }
 
         private bool CanAccessFile { get=> _fileInfo.Exists && !_fileInfo.IsReadOnly() && !_fileInfo.IsLocked(); }

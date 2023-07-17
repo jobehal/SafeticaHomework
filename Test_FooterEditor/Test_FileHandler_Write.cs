@@ -9,17 +9,6 @@ namespace Test_FooterEditor
 
     public class Test_FileHandler_Write
     {   
-        private static string ReadFileEnd(string filePath, int size)
-        {
-            byte[] buffer = new byte[size];
-            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                fs.Seek(-size, SeekOrigin.End);
-                fs.Read(buffer, 0, buffer.Length);
-                return Encoding.UTF8.GetString(buffer);
-            }
-        }
-
         [Theory]
         [InlineData(FileHandlerTestInputs.readOnlyFile)]
         [InlineData(FileHandlerTestInputs.nonExistingFile)]
@@ -47,7 +36,7 @@ namespace Test_FooterEditor
             reader.WriteToEnd(newText, 0);
 
             Thread.Sleep(5);
-            string fileEndText = ReadFileEnd(newFile.FullName, newText.Length);
+            string fileEndText = FileHandlerTestInputs.ReadFileEnd(newFile.FullName, newText.Length);
             Assert.Equal(newText, fileEndText);
             Assert.Equal(originalFile.Length + newText.Length, newFile.Length);
         }
@@ -77,7 +66,7 @@ namespace Test_FooterEditor
             
             reader.WriteToEnd(newText, start);
 
-            string fileEndText = ReadFileEnd(newFile.FullName, newText.Length);
+            string fileEndText = FileHandlerTestInputs.ReadFileEnd(newFile.FullName, newText.Length);
             Assert.Equal(newText, fileEndText);
             Assert.Equal(expectdLength, newFile.Length);
         }
