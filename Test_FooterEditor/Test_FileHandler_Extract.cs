@@ -6,10 +6,10 @@ namespace Test_FooterEditor
     public class Test_FileHandler_Extract
     {
         [Theory]
-        [InlineData(0, "[A]123\n456")]
-        [InlineData(4, "    [A]123\n456")]
-        [InlineData(4, "xxxx[A]123\n456")]
-        [InlineData(4, "xxxx[A]123\n456       ")]        
+        [InlineData(10, "[A]123\n456")]
+        [InlineData(10, "    [A]123\n456")]
+        [InlineData(10, "xxxx[A]123\n456")]
+        [InlineData(17, "xxxx[A]123\n456       ")]        
         public void ExtractString(int expectedIndex, string inputString)
         {
             var reader = new FileHandler("LongTestFile.txt");

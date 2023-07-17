@@ -60,8 +60,6 @@ namespace FooterEditor
 
                         totalBytesRead += bytesRead;
                     }
-
-                    //return Encoding.UTF8.GetString(buffer, 0, (int)totalBytesRead);
                     return GetString(buffer);
                 }
 
@@ -88,7 +86,9 @@ namespace FooterEditor
             string? substring = null;
             if (index != -1)
             {
-                substring = inputString.Substring(index, inputString.Length-index).Trim();
+                string fullsubstring = inputString.Substring(index, inputString.Length-index);
+                index = GetBytes(fullsubstring).Length;
+                substring = fullsubstring.Trim();
             }
             else
             {
@@ -102,6 +102,7 @@ namespace FooterEditor
         {   
             if (!CanAccessFile)
             {
+                //TODO exception
                 Console.WriteLine("Unable to write to the file. No changes would be made.");
                 return;
             }
@@ -110,7 +111,7 @@ namespace FooterEditor
             {
                 byte[] bytesToWrite = GetBytes(content);
                 
-                fs.SetLength(_fileInfo.Length-startPossition);
+                fs.SetLength(_fileInfo.Length - startPossition);
                 fs.Seek(0, SeekOrigin.End);
                 
                 fs.Write(bytesToWrite, 0, bytesToWrite.Length);

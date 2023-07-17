@@ -21,7 +21,6 @@ namespace Test_FooterEditor
         [Theory]
         [InlineData("LongTestFile.txt")]
         [InlineData("HiddenFile.txt")]
-        [InlineData("Empty.txt")]
         [InlineData("LongTestFile.pdf")]
         public void ReadExistingLongFile(string fileName)
         {
@@ -32,14 +31,17 @@ namespace Test_FooterEditor
             Assert.Equal(1024, ret.Length);
         }
 
-        [Fact]
-        public void ReadExistingShortFile()
+        [Theory]
+        [InlineData(1, "Empty.txt")]
+        [InlineData(116, "ShortTestFile.txt")]
+        public void ReadExistingShortFile(int expectedLength, string fileName)
         {
-            var reader = new FileHandler(Path.Combine(localDir, "ShortTestFile.txt"));
+            var fileInfo = new FileInfo(Path.Combine(localDir, fileName));
+            var reader = new FileHandler(fileInfo.FullName);
 
             var ret = reader.ReadFromEnd(1024);
 
-            Assert.Equal(116, ret.Length);
+            Assert.Equal(expectedLength, ret.Length);
         }
 
         [Theory]
