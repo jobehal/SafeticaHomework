@@ -3,8 +3,7 @@
 namespace Test_FooterEditor
 {
     public static class FooterInputs
-    {
-        //TODO - PARAMETRIZE INPUT AND DICTS
+    {   
         public const string correctInput   = "[SafeticaProperties]\nproperty1=value1\nproperty2=value2";
         public static readonly Dictionary<string, string> correctProps = new Dictionary<string, string>
         {

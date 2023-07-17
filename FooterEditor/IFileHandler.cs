@@ -2,7 +2,8 @@
 {
     public interface IFileHandler
     {
-        public byte[] ReadBytes(int byteCount);
-        public void Write(string content);
+        public string ReadFromEnd(int byteCount);
+        public Tuple<int, string> SplitBySubstring(string inputString, string searchTag);
+        public void WriteToEnd(string content, int startPossition);
     }
 }

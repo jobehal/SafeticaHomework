@@ -4,22 +4,7 @@ using Xunit;
 
 namespace Test_FooterEditor
 {
-    public class TestFileHandlerExtract
-    {
-        [Theory]
-        [InlineData("[A]123\n456")]
-        [InlineData("xxxxxxx[A]123\n456")]
-        [InlineData("xxxxxxx[A]123\n456       ")]        
-        public void ExtractString(string inputString)
-        {
-            var reader = new FileHandler("LongTestFile.txt");
-
-            var output = reader.ExctractTextFromSearchToTheEnd(inputString, "[A]");
-
-            Assert.Equal("[A]123\n456", output);
-        }
-    }
-    public class TestFileHandlerRead
+    public class Test_FileHandler_Read
     {
         private string localDir { get => new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName; }
         
@@ -28,7 +13,7 @@ namespace Test_FooterEditor
         {
             var reader = new FileHandler("LongTestFile.txt");
 
-            byte[]? ret = reader.ReadBytes(1024);
+            string ret = reader.ReadFromEnd(1024);
 
             Assert.Equal(1024, ret.Length);
         }
@@ -36,12 +21,13 @@ namespace Test_FooterEditor
         [Theory]
         [InlineData("LongTestFile.txt")]
         [InlineData("HiddenFile.txt")]
+        [InlineData("Empty.txt")]
         [InlineData("LongTestFile.pdf")]
         public void ReadExistingLongFile(string fileName)
         {
             var reader = new FileHandler(Path.Combine(localDir, fileName));
 
-            byte[]? ret = reader.ReadBytes(1024);
+            var ret = reader.ReadFromEnd(1024);
 
             Assert.Equal(1024, ret.Length);
         }
@@ -51,9 +37,9 @@ namespace Test_FooterEditor
         {
             var reader = new FileHandler(Path.Combine(localDir, "ShortTestFile.txt"));
 
-            byte[]? ret = reader.ReadBytes(1024);
+            var ret = reader.ReadFromEnd(1024);
 
-            Assert.Equal(118, ret.Length);
+            Assert.Equal(116, ret.Length);
         }
 
         [Theory]
@@ -64,7 +50,7 @@ namespace Test_FooterEditor
         {
             var reader = new FileHandler(Path.Combine(localDir, fileName));
 
-            byte[]? ret = reader.ReadBytes(1024);
+            var ret = reader.ReadFromEnd(1024);
 
             Assert.Null(ret);
         }
@@ -78,7 +64,7 @@ namespace Test_FooterEditor
 
             var reader = new FileHandler(filePath);
 
-            byte[]? ret = reader.ReadBytes(1024);
+            var ret = reader.ReadFromEnd(1024);
 
             Assert.Null(ret);
             file.Close();
@@ -89,7 +75,7 @@ namespace Test_FooterEditor
         {
             var reader = new FileHandler(Path.Combine(localDir, "LongTestFile.pdf"));
 
-            byte[]? ret = reader.ReadBytes(1024);
+            var ret = reader.ReadFromEnd(1024);
 
             Assert.Equal(1024, ret.Length);
         }

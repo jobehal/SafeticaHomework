@@ -5,7 +5,7 @@ using System;
 namespace Test_FooterEditor
 {
 
-    public class TestFooterConstructor
+    public class Test_Footer_Constructor
     {        
         [Theory]
         [InlineData(FooterInputs.noHeadInput)]

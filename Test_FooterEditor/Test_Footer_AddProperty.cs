@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Test_FooterEditor
 {
-    public class TestFooterAddProperty
+    public class Test_Footer_AddProperty
     {
         public static IEnumerable<object[]> GetAddPropertyInConstructorData()
         {

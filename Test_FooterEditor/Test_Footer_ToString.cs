@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Test_FooterEditor
 {
-    public class TestFooterToString
+    public class Test_Footer_ToString
     {
         [Fact]
         public void NoEditToString()

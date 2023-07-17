@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Test_FooterEditor
 {
-    public class TestFooterEditProperty
+    public class Test_Footer_EditProperty
     {
         [Fact]
         public void EditExistingProperty()
