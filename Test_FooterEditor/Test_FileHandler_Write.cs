@@ -6,10 +6,9 @@ using Xunit;
 
 namespace Test_FooterEditor
 {
+
     public class Test_FileHandler_Write
-    {
-        private string localDir { get => new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName; }
-        
+    {   
         private static string ReadFileEnd(string filePath, int size)
         {
             byte[] buffer = new byte[size];
@@ -22,30 +21,25 @@ namespace Test_FooterEditor
         }
 
         [Theory]
-        [InlineData("ReadOnlyFile.txt")]
-        [InlineData("NonExisting.txt")]
-        [InlineData("LockedFile.txt")]
+        [InlineData(FileHandlerTestInputs.readOnlyFile)]
+        [InlineData(FileHandlerTestInputs.nonExistingFile)]
+        [InlineData(FileHandlerTestInputs.lockedFile)]
         public void WriteUnaccesableFiles(string fileName)
         {
-            var filePath = new FileInfo(Path.Combine(localDir, fileName));
-            long expectedLenght = filePath.Exists ? filePath.Length : -1;
+            var filePath = new FileInfo(FileHandlerTestInputs.GetFilePath(fileName));            
             FileHandler reader = new FileHandler(filePath.FullName);
 
-            reader.WriteToEnd("123456", 0);            
-
-            long newLength = filePath.Exists ? filePath.Length : -1;
-            Assert.Equal(expectedLenght, newLength);
+            Assert.Throws<IOException>(() => reader.WriteToEnd("123456", 0));            
         }
 
-
         [Theory]
-        [InlineData("LongTestFile.txt")]
-        [InlineData("ShortTestFile.txt")]
-        [InlineData("Empty.txt")]
-        [InlineData("HiddenFile.txt")]
+        [InlineData(FileHandlerTestInputs.longFile)]
+        [InlineData(FileHandlerTestInputs.shortFile)]
+        [InlineData(FileHandlerTestInputs.emptyFile)]
+        [InlineData(FileHandlerTestInputs.hiddenFile)]
         public void WriteNewFooter(string fileName)
         {
-            FileInfo originalFile = new FileInfo(Path.Combine(localDir, fileName));
+            FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(fileName));
             FileInfo newFile = originalFile.CopyTo(originalFile.FullName.Replace(".txt","_new.txt"), true);
 
             var reader = new FileHandler(newFile.FullName);
@@ -59,13 +53,13 @@ namespace Test_FooterEditor
         }
 
         [Theory]
-        [InlineData("LongTestFile.txt")]
-        [InlineData("ShortTestFile.txt")]
-        [InlineData("Empty.txt")]
-        [InlineData("HiddenFile.txt")]
+        [InlineData(FileHandlerTestInputs.longFile)]
+        [InlineData(FileHandlerTestInputs.shortFile)]
+        [InlineData(FileHandlerTestInputs.emptyFile)]
+        [InlineData(FileHandlerTestInputs.hiddenFile)]
         public void OverWriteFooter(string fileName)
         {
-            FileInfo originalFile = new FileInfo(Path.Combine(localDir, fileName));
+            FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(fileName));
             FileInfo newFile = originalFile.CopyTo(originalFile.FullName.Replace(".txt", "_ovr.txt"), true);
 
             var reader = new FileHandler(newFile.FullName);
@@ -86,6 +80,20 @@ namespace Test_FooterEditor
             string fileEndText = ReadFileEnd(newFile.FullName, newText.Length);
             Assert.Equal(newText, fileEndText);
             Assert.Equal(expectdLength, newFile.Length);
+        }
+        [Fact]
+        public void ReadFileLockedByAnotherProcess()
+        {
+            string filePath = Path.Combine(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.longFile));
+            //lock the file
+            var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
+
+            var reader = new FileHandler(filePath);
+
+            Assert.Throws<IOException>(() => reader.WriteToEnd("123",0));
+
+            file.Close();
+            Thread.Sleep(5);
         }
 
     }

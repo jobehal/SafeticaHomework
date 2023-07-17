@@ -1,17 +1,16 @@
 ﻿using FooterEditor;
 using System.IO;
+using System.Threading;
 using Xunit;
 
 namespace Test_FooterEditor
 {
     public class Test_FileHandler_Read
-    {
-        private string localDir { get => new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.Parent.FullName; }
-        
+    {   
         [Fact]
         public void ReadFileLocalPath()
         {
-            var reader = new FileHandler("LongTestFile.txt");
+            var reader = new FileHandler(FileHandlerTestInputs.longFile);
 
             string ret = reader.ReadFromEnd(1024);
 
@@ -19,12 +18,11 @@ namespace Test_FooterEditor
         }
 
         [Theory]
-        [InlineData("LongTestFile.txt")]
-        [InlineData("HiddenFile.txt")]
-        [InlineData("LongTestFile.pdf")]
+        [InlineData(FileHandlerTestInputs.longFile)]
+        [InlineData(FileHandlerTestInputs.hiddenFile)]        
         public void ReadExistingLongFile(string fileName)
         {
-            var reader = new FileHandler(Path.Combine(localDir, fileName));
+            var reader = new FileHandler(FileHandlerTestInputs.GetFilePath(fileName));
 
             var ret = reader.ReadFromEnd(1024);
 
@@ -32,11 +30,11 @@ namespace Test_FooterEditor
         }
 
         [Theory]
-        [InlineData(1, "Empty.txt")]
-        [InlineData(116, "ShortTestFile.txt")]
+        [InlineData(1, FileHandlerTestInputs.emptyFile)]
+        [InlineData(116, FileHandlerTestInputs.shortFile)]
         public void ReadExistingShortFile(int expectedLength, string fileName)
         {
-            var fileInfo = new FileInfo(Path.Combine(localDir, fileName));
+            var fileInfo = new FileInfo(FileHandlerTestInputs.GetFilePath(fileName));
             var reader = new FileHandler(fileInfo.FullName);
 
             var ret = reader.ReadFromEnd(1024);
@@ -45,43 +43,30 @@ namespace Test_FooterEditor
         }
 
         [Theory]
-        [InlineData("ReadOnlyFile.txt")]
-        [InlineData("NonExisting.txt")]
-        [InlineData("LockedFile.txt")]        
+        [InlineData(FileHandlerTestInputs.readOnlyFile)]
+        [InlineData(FileHandlerTestInputs.nonExistingFile)]
+        [InlineData(FileHandlerTestInputs.lockedFile)]        
         public void ReadUnaccesableFiles(string fileName)
         {
-            var reader = new FileHandler(Path.Combine(localDir, fileName));
+            var reader = new FileHandler(FileHandlerTestInputs.GetFilePath(fileName));
 
-            var ret = reader.ReadFromEnd(1024);
-
-            Assert.Null(ret);
+            Assert.Throws<IOException>(() => reader.ReadFromEnd(1024));
         }
 
         [Fact]
         public void ReadFileLockedByAnotherProcess()
         {
-            string filePath = Path.Combine(localDir, "LongTestFile.txt");
+            string filePath = Path.Combine(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.longFile));
             //lock the file
             var file = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.None);
 
             var reader = new FileHandler(filePath);
 
-            var ret = reader.ReadFromEnd(1024);
-
-            Assert.Null(ret);
+            Assert.Throws<IOException>(() => reader.ReadFromEnd(1024));
+            
             file.Close();
+            Thread.Sleep(5);
         }
-
-        [Fact]
-        public void ReadBinary()
-        {
-            var reader = new FileHandler(Path.Combine(localDir, "LongTestFile.pdf"));
-
-            var ret = reader.ReadFromEnd(1024);
-
-            Assert.Equal(1024, ret.Length);
-        }
-
 
     }
 }

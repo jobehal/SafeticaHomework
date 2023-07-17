@@ -399,3 +399,4 @@ FodyWeavers.xsd
 *_ovr.txt
 *_new.txt
 Test_FooterEditor/LockedFile.txt
+Test_FooterEditor/TestFiles/LockedTestFile.txt

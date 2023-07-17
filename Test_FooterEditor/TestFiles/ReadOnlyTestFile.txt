@@ -1,4 +1,4 @@
 ﻿Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 [SafeticaProperties]
 property1=value1
-property2=value2
+property2=value2123456123456123456123456

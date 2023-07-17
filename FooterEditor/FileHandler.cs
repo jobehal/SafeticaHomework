@@ -26,8 +26,7 @@ namespace FooterEditor
         {
             if (!CanAccessFile)
             {
-                Console.WriteLine("Can not read the file.");
-                return null;
+                throw new IOException("Can not read the file.");                
             }
 
             using (FileStream fs = new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read))

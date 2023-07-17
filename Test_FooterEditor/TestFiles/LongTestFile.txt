@@ -38,6 +38,7 @@
 38 Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 39 Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 40 Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+41 Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
 [SafeticaProperties]
 property1=value1
 property2=value2

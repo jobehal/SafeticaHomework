@@ -25,19 +25,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="HiddenFile.txt">
+    <None Update="TestFiles\HiddenFile.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="LockedFile.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="LongTestFile.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="TestFiles\LongTestFile.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ReadOnlyFile.txt">
+    <None Update="TestFiles\ReadOnlyFile.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Update="ShortTestFile.txt">
+    <None Update="TestFiles\ShortTestFile.txt">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
