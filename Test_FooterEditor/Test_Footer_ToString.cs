@@ -15,6 +15,16 @@ namespace Test_FooterEditor
 
             Assert.Equal(FooterInputs.correctInput, result);
         }
+        
+        [Fact]
+        public void EmptyStringIfNoProps()
+        {
+            Footer footer = new Footer("", FooterInputs.headTag);
+
+            string result = footer.ToString();
+
+            Assert.Equal("", result);
+        }
 
         [Fact]
         public void AddProperty()

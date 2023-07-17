@@ -15,14 +15,14 @@ namespace Test_FooterEditor
             Assert.Throws<ArgumentException>(() => new Footer(input, FooterInputs.headTag));
         }
         
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("  ")]
-        public void NullOrEmptyInputRiseException(string input)
-        {
-            Assert.Throws<ArgumentNullException>(() => new Footer(input, FooterInputs.headTag));
-        }
+        // [Theory]
+        // [InlineData(null)]
+        // [InlineData("")]
+        // [InlineData("  ")]
+        // public void NullOrEmptyInputRiseException(string input)
+        // {
+        //     Assert.Throws<ArgumentNullException>(() => new Footer(input, FooterInputs.headTag));
+        // }
 
         [Theory]
         [InlineData(FooterInputs.correctInput)]

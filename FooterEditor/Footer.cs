@@ -13,16 +13,10 @@ namespace FooterEditor
         
         public Footer(string footerStr, string footerTag, string lineSep = "\n", string propValSep = "=")
         {
-
-            if (string.IsNullOrWhiteSpace(footerStr))
-            {
-                throw new ArgumentNullException("Input is null or empty");
-            }
             _defaultName = footerTag;
             _lineSep = lineSep;
             _propValSep = propValSep;
             ParseInput(footerStr);
-
         }
 
         private void ParseInput(string footerStr)
@@ -100,16 +94,16 @@ namespace FooterEditor
 
         public override string ToString()
         {
+            string nameStr = $"{_defaultName}{_lineSep}";
             
             IEnumerable<string> kvPairsStr = _properties.Select(kvPair => $"{kvPair.Key}{_propValSep}{kvPair.Value}");                        
             string propsString = string.Join(_lineSep,kvPairsStr);
             if (string.IsNullOrEmpty(propsString))
             {
-                return null;
+                return $"{nameStr}";
             }
             else
             {
-                string nameStr = $"{_defaultName}{_lineSep}";
                 return $"{nameStr}{propsString}";
             }
 
