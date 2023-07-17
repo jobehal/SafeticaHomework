@@ -19,7 +19,7 @@ namespace Test_FooterEditor
         [MemberData(nameof(GetAddPropertyInConstructorData))]
         public void AddPropertyInConstructor(Dictionary<string, string> expectedResult, string input)
         {
-            Footer footer = new Footer(input);
+            Footer footer = new Footer(input, FooterInputs.headTag);
 
             Assert.Equal(expectedResult, footer.Properties);
         }
@@ -34,7 +34,7 @@ namespace Test_FooterEditor
         [MemberData(nameof(GetAddPropertyData))]
         public void AddNewProperty(string propName)
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
             Dictionary<string, string> expected = new Dictionary<string, string>(FooterInputs.correctProps);
             expected.Add("new property", "newValue");
 
@@ -54,7 +54,7 @@ namespace Test_FooterEditor
         [MemberData(nameof(GetAddExistingOrEmptyPropertyData))]
         public void AddExistingOrEmptyProperty(string propName)
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
                         
             footer.AddProperty(propName, "newValue");
 

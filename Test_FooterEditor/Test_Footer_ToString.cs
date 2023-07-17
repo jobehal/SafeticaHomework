@@ -9,7 +9,7 @@ namespace Test_FooterEditor
         [Fact]
         public void NoEditToString()
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
 
             string result = footer.ToString();
 
@@ -19,7 +19,7 @@ namespace Test_FooterEditor
         [Fact]
         public void AddProperty()
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
             string prop = "   added Property   ";
             string val = "newVal";
 
@@ -36,7 +36,7 @@ namespace Test_FooterEditor
         [Fact]
         public void EditExistingProperty()
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
             string prop = FooterInputs.correctProps.Keys.First();
             string oldVal = FooterInputs.correctProps[prop];
             string newVal  = "new  Val   .";
@@ -54,7 +54,7 @@ namespace Test_FooterEditor
         [Fact]
         public void EditNonExistingProperty()
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
             string prop = "  test non existing...";
             string val = "editedNewValue   ";
 
@@ -71,7 +71,7 @@ namespace Test_FooterEditor
         [Fact]
         public void RemoveNonExistingProperty()
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
 
             footer.RemoveProperty("test remove nonexiting...");
 
@@ -83,7 +83,7 @@ namespace Test_FooterEditor
         [Fact]
         public void RemoveExistingProperty()
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
             string prop = FooterInputs.correctProps.Keys.First();
             string val  = FooterInputs.correctProps[prop]; 
             

@@ -10,7 +10,7 @@ namespace Test_FooterEditor
         [Fact]
         public void EditExistingProperty()
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
             Dictionary<string, string> expected = new Dictionary<string, string>(FooterInputs.correctProps);
             string prop = expected.Keys.First();
             string newVal = "editedProperty";
@@ -30,7 +30,7 @@ namespace Test_FooterEditor
         [MemberData(nameof(GetEditNonExistinProperty))]
         public void EditNonExistinProperty(string prop)
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
             Dictionary<string, string> expected = new Dictionary<string, string>(FooterInputs.correctProps);
             
             string newVal = "editedProperty";

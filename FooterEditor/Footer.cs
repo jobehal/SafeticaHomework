@@ -7,19 +7,23 @@ namespace FooterEditor
 
         private Dictionary<string, string> _properties = new Dictionary<string, string>();
         public Dictionary<string, string> Properties { get => _properties;}
-        private string _lineSep = "\n";
-        private string _propValSep = "=";
-        private Tuple<string, string> _nameSep = Tuple.Create("[","]");
+        private string _lineSep;
+        private string _propValSep;
         
-        private string _defaultName = "SafeticaProperties";
+        private string _defaultName;
         
-        public Footer(string footerStr)
+        public Footer(string footerStr, string footerTag, string lineSep = "\n", string propValSep = "=")
         {
+
             if (string.IsNullOrWhiteSpace(footerStr))
             {
                 throw new ArgumentNullException("Input is null or empty");
             }
+            _defaultName = footerTag;
+            _lineSep = lineSep;
+            _propValSep = propValSep;
             ParseInput(footerStr);
+
         }
 
         private void ParseInput(string footerStr)
@@ -106,7 +110,7 @@ namespace FooterEditor
             }
             else
             {
-                string nameStr = $"{_nameSep.Item1}{_defaultName}{_nameSep.Item2}{_lineSep}";
+                string nameStr = $"{_defaultName}{_lineSep}";
                 return $"{nameStr}{propsString}";
             }
 

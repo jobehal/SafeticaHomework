@@ -10,7 +10,7 @@ namespace Test_FooterEditor
         [Fact]
         public void RemoveExistingProperty()
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
             Dictionary<string, string> expected = new Dictionary<string, string>(FooterInputs.correctProps);
             string prop = expected.Keys.First();
             
@@ -24,7 +24,7 @@ namespace Test_FooterEditor
         [Fact]
         public void RemoveNonExistingProperty()
         {
-            Footer footer = new Footer(FooterInputs.correctInput);
+            Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
             Dictionary<string, string> expected = new Dictionary<string, string>(FooterInputs.correctProps);
             
             footer.RemoveProperty("   test non existing");

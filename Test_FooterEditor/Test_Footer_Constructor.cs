@@ -12,7 +12,7 @@ namespace Test_FooterEditor
         [InlineData(FooterInputs.wrongHeadInput)]
         public void CorruptedHeadRaisException(string input)
         {
-            Assert.Throws<ArgumentException>(() => new Footer(input));
+            Assert.Throws<ArgumentException>(() => new Footer(input, FooterInputs.headTag));
         }
         
         [Theory]
@@ -21,7 +21,7 @@ namespace Test_FooterEditor
         [InlineData("  ")]
         public void NullOrEmptyInputRiseException(string input)
         {
-            Assert.Throws<ArgumentNullException>(() => new Footer(input));
+            Assert.Throws<ArgumentNullException>(() => new Footer(input, FooterInputs.headTag));
         }
 
         [Theory]
@@ -29,7 +29,7 @@ namespace Test_FooterEditor
         [InlineData(FooterInputs.corruptedPropsInput)]
         public void NotNullAfterCorrectInput(string input)
         {            
-            Footer footer = new Footer(input);
+            Footer footer = new Footer(input, FooterInputs.headTag);
          
             Assert.NotNull(footer);
         }
