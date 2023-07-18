@@ -24,7 +24,7 @@ namespace Test_FooterEditor
         [InlineData(FileHandlerTestInputs.longFile)]
         [InlineData(FileHandlerTestInputs.hiddenFile)]        
         public void ReadExistingLongFile(string fileName)
-        {
+        {            
             var reader = new FileHandler(FileHandlerTestInputs.GetFilePath(fileName));
 
             var ret = reader.ReadFromEnd(1024);
@@ -49,7 +49,7 @@ namespace Test_FooterEditor
         [Fact]
         public void ReadSecuredFile()
         {
-            var fileInfo = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.lockedFile));
+            var fileInfo = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.readOnlyFile));
 
             FileHandlerTestInputs.SetSecurity(fileInfo,AccessControlType.Deny);
             var reader = new FileHandler(fileInfo.FullName);

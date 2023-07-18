@@ -33,11 +33,14 @@ if (arguments?.Length == 3)
     string fileName    = arguments[1];    
     string propValPair = arguments[2];
 
+    string headTag = GetHeadTag();
+    int maxLenght  = GetMaxLength();
+
     //print blank line
     Console.WriteLine("\n");
     try
     {
-        IFileFooterEditor fileFooterEditor = new FileFooterEditor(fileName);
+        IFileFooterEditor fileFooterEditor = new FileFooterEditor(fileName, headTag, maxLenght);
         fileFooterEditor.Execute(method, propValPair);        
         if (showWait)
         {
@@ -50,6 +53,11 @@ if (arguments?.Length == 3)
         WaitForKeyPress("Press any key to continue...");
     }
 }
+//
+//
+//
+string GetHeadTag() => "[SafeticaProperties]";
+int GetMaxLength() => 1024;
 
 string GetHelp()
 {

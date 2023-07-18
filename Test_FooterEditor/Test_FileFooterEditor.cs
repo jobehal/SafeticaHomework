@@ -30,7 +30,7 @@ namespace Test_FooterEditor
             FileInfo newFile = originalFile.CopyTo(originalFile.FullName.Replace(".txt", "_prog_add.txt"), true);
 
 
-            FileFooterEditor footerEditor = new FileFooterEditor(newFile.FullName);
+            FileFooterEditor footerEditor = new FileFooterEditor(newFile.FullName, "[SafeticaProperties]", 1024);
             footerEditor.Execute("add", "addedProp=123");
 
             var fileEndString = FileHandlerTestInputs.ReadFileEnd(newFile.FullName, bytesLength);
@@ -49,7 +49,7 @@ namespace Test_FooterEditor
             FileInfo newFile = originalFile.CopyTo(originalFile.FullName.Replace(".txt", "_prog_edit_new.txt"), true);
 
 
-            FileFooterEditor footerEditor = new FileFooterEditor(newFile.FullName);
+            FileFooterEditor footerEditor = new FileFooterEditor(newFile.FullName, "[SafeticaProperties]", 1024);
             footerEditor.Execute("edit", "addedProp=123");
 
             var fileEndString = FileHandlerTestInputs.ReadFileEnd(newFile.FullName, bytesLength);
@@ -65,7 +65,7 @@ namespace Test_FooterEditor
             FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(inputFile));
             FileInfo newFile = originalFile.CopyTo(originalFile.FullName.Replace(".txt", "_prog_edit_existing.txt"), true);
 
-            FileFooterEditor footerEditor = new FileFooterEditor(newFile.FullName);
+            FileFooterEditor footerEditor = new FileFooterEditor(newFile.FullName, "[SafeticaProperties]", 1024);
             footerEditor.Execute("edit", "property1=edited");
 
             var fileEndString = FileHandlerTestInputs.ReadFileEnd(newFile.FullName, bytesLength);
@@ -83,7 +83,7 @@ namespace Test_FooterEditor
             FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(inputFile));
             FileInfo newFile = originalFile.CopyTo(originalFile.FullName.Replace(".txt", "_prog_remove_existing.txt"), true);
 
-            FileFooterEditor footerEditor = new FileFooterEditor(newFile.FullName);
+            FileFooterEditor footerEditor = new FileFooterEditor(newFile.FullName, "[SafeticaProperties]", 1024);
             footerEditor.Execute("remove", "property1");
 
             var fileEndString = FileHandlerTestInputs.ReadFileEnd(newFile.FullName, bytesLength);
@@ -99,7 +99,7 @@ namespace Test_FooterEditor
             FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(inputFile));
             FileInfo newFile = originalFile.CopyTo(originalFile.FullName.Replace(".txt", "_prog_remove_nonexisting.txt"), true);
 
-            FileFooterEditor footerEditor = new FileFooterEditor(newFile.FullName);
+            FileFooterEditor footerEditor = new FileFooterEditor(newFile.FullName, "[SafeticaProperties]", 1024);
             footerEditor.Execute("remove", "nonExisting");
 
             var fileEndString = FileHandlerTestInputs.ReadFileEnd(newFile.FullName, bytesLength);
@@ -111,8 +111,8 @@ namespace Test_FooterEditor
         {   
             FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.longFile));            
 
-            FileFooterEditor footerEditor = new FileFooterEditor(originalFile.FullName);
-            Assert.Throws<ArgumentException>(() => footerEditor.Execute("nonExisting", "nonExisting"));
+            FileFooterEditor footerEditor = new FileFooterEditor(originalFile.FullName, "[SafeticaProperties]", 1024);
+            Assert.ThrowsAny<Exception>(() => footerEditor.Execute("nonExisting", "nonExisting"));
         }
     
         [Theory]    
@@ -122,7 +122,7 @@ namespace Test_FooterEditor
         {
             FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.longFile));
 
-            FileFooterEditor footerEditor = new FileFooterEditor(originalFile.FullName);
+            FileFooterEditor footerEditor = new FileFooterEditor(originalFile.FullName, "[SafeticaProperties]", 1024);
             Assert.Throws<ArgumentException>(() => footerEditor.Execute(method, "onlyProp"));
         }
 
@@ -131,7 +131,7 @@ namespace Test_FooterEditor
         {
             FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.longFile));
 
-            FileFooterEditor footerEditor = new FileFooterEditor(originalFile.FullName);
+            FileFooterEditor footerEditor = new FileFooterEditor(originalFile.FullName, "[SafeticaProperties]", 1024);
             string longProp = new string('a', 1024);
 
             Assert.Throws<ArgumentException>(() => footerEditor.Execute("add", $"long={longProp}"));

@@ -1,13 +1,9 @@
 ﻿using FooterEditor;
 public class FileFooterEditor : IFileFooterEditor
 {
-    //
-    // Defult Values
-    //
-    private int footerMaxLenght = 1024;
-    private string footerHeadTag = "[SafeticaProperties]";
-
-    private IFileHandler reader;
+    private readonly int footerMaxLenght;
+    private readonly string footerHeadTag;    
+    private readonly IFileHandler reader;
     private string method;
     private string[] propValPair;
     
@@ -43,9 +39,11 @@ public class FileFooterEditor : IFileFooterEditor
     //  
     //  CTOR  
     //  
-    public FileFooterEditor(string fileName)
+    public FileFooterEditor(string fileName, string footerHeadTag, int footerMaxLenght)
     {
-            reader = new FileHandler(fileName);
+        reader = new FileHandler(fileName);
+        this.footerHeadTag = footerHeadTag;
+        this.footerMaxLenght = footerMaxLenght;
     }  
             
     public void Execute(string method, string propValPair)
