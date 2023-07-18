@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Security.Principal;
+using System.Security.AccessControl;
 using Xunit;
 
 namespace Test_FooterEditor
@@ -44,14 +46,28 @@ namespace Test_FooterEditor
             Assert.Equal(expectedLength, ret.Length);
         }
 
-        [Theory]
-        [InlineData(FileHandlerTestInputs.readOnlyFile)]
-        [InlineData(FileHandlerTestInputs.lockedFile)]        
-        public void ReadUnaccesableFiles(string fileName)
+        [Fact]
+        public void ReadSecuredFile()
         {
-            var reader = new FileHandler(FileHandlerTestInputs.GetFilePath(fileName));
+            var fileInfo = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.lockedFile));
+
+            FileHandlerTestInputs.SetSecurity(fileInfo,AccessControlType.Deny);
+            var reader = new FileHandler(fileInfo.FullName);
+
+            Assert.Throws<UnauthorizedAccessException>(() => reader.ReadFromEnd(1024));
+            FileHandlerTestInputs.SetSecurity(fileInfo,AccessControlType.Allow);
+        }
+
+        [Fact]
+        public void ReadReadOnlyFile()
+        {
+            string filePath = FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.readOnlyFile);
+            File.SetAttributes(filePath, FileAttributes.ReadOnly);
+            
+            var reader = new FileHandler(filePath);
 
             Assert.Throws<UnauthorizedAccessException>  (() => reader.ReadFromEnd(1024));
+            File.SetAttributes(filePath, FileAttributes.Normal);
         }
 
         [Fact]

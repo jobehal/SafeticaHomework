@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 
 namespace Test_FooterEditor
@@ -12,6 +14,18 @@ namespace Test_FooterEditor
         internal const string lockedFile = "LockedTestFile.txt";
         internal const string emptyFile = "EmptyTestfile.txt";
         internal const string hiddenFile = "HiddenTestFile.txt";
+
+        internal static void SetSecurity(FileInfo fileInfo, AccessControlType type)
+        {
+            FileSecurity fileSecurity = fileInfo.GetAccessControl();
+            WindowsIdentity currentUser = WindowsIdentity.GetCurrent();
+            SecurityIdentifier currentUserSid = currentUser.User;
+            FileSystemAccessRule ownerRule = new FileSystemAccessRule(currentUserSid, FileSystemRights.FullControl, type);
+            fileSecurity.PurgeAccessRules(currentUserSid);
+            fileSecurity.AddAccessRule(ownerRule);
+
+            fileInfo.SetAccessControl(fileSecurity);
+        }
 
         internal static string GetFilePath(string filePath)
         {

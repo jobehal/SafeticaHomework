@@ -1,6 +1,7 @@
 ﻿using FooterEditor;
 using System;
 using System.IO;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
 using Xunit;
@@ -9,16 +10,27 @@ namespace Test_FooterEditor
 {
 
     public class Test_FileHandler_Write
-    {   
-        [Theory]
-        [InlineData(FileHandlerTestInputs.readOnlyFile)]
-        [InlineData(FileHandlerTestInputs.lockedFile)]
-        public void WriteUnaccesableFiles(string fileName)
+    {
+        [Fact]
+        public void WriteToSecuredFiles()
         {
-            var filePath = new FileInfo(FileHandlerTestInputs.GetFilePath(fileName));            
+            FileInfo fileInfo = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.readOnlyFile));
+            FileHandlerTestInputs.SetSecurity(fileInfo, AccessControlType.Deny);
+            FileHandler reader = new FileHandler(fileInfo.FullName);
+
+            Assert.Throws<UnauthorizedAccessException>(() => reader.WriteToEnd("123456", 0));
+            FileHandlerTestInputs.SetSecurity(fileInfo, AccessControlType.Allow);
+        }
+
+        [Fact]
+        public void WriteToReadOnlyFiles()
+        {
+            FileInfo filePath = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.readOnlyFile));
+            File.SetAttributes(filePath.FullName, FileAttributes.ReadOnly);
             FileHandler reader = new FileHandler(filePath.FullName);
 
             Assert.Throws<UnauthorizedAccessException>(() => reader.WriteToEnd("123456", 0));            
+            File.SetAttributes(filePath.FullName, FileAttributes.Normal);
         }
         
         [Fact]
