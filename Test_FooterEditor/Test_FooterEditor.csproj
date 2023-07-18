@@ -42,4 +42,9 @@
     </None>
   </ItemGroup>
 
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Copy SourceFiles="$(SolutionDir)Test_FooterEditor\TestFiles\LongTestFile.txt" DestinationFolder="$(TargetDir)" />
+  </Target>
+
 </Project>

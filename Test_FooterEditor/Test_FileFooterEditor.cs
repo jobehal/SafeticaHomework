@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using Xunit;
 
 namespace Test_FooterEditor
@@ -106,7 +107,7 @@ namespace Test_FooterEditor
 
         [Fact]
         public void CallNonExistingMethod()
-        {
+        {   
             FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.longFile));            
 
             FileFooterEditor footerEditor = new FileFooterEditor(originalFile.FullName);

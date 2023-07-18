@@ -34,6 +34,7 @@ namespace Test_FooterEditor
         [InlineData(116, FileHandlerTestInputs.shortFile)]
         public void ReadExistingShortFile(int expectedLength, string fileName)
         {
+            Thread.Sleep(5);
             var fileInfo = new FileInfo(FileHandlerTestInputs.GetFilePath(fileName));
             var reader = new FileHandler(fileInfo.FullName);
 
