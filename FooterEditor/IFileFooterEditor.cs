@@ -1,5 +1,5 @@
 ﻿public interface IFileFooterEditor
 {
-    void Execute(string actionName, string propValpair);
+    void Execute(string method, string propValpair);
 }
 

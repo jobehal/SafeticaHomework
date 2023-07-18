@@ -13,13 +13,11 @@
             }
             catch (IOException err)
             {
-                Console.WriteLine($"File is locked {err}");
-                return true;
+                throw new IOException($"File is locked {err.Message}");
             }
             catch (UnauthorizedAccessException err)
             {
-                Console.WriteLine($"Unauthorzed access {err}");
-                return true;
+                throw new UnauthorizedAccessException($"Unauthorzed access {err.Message}");                
             }
         }
 
@@ -28,8 +26,7 @@
             var attributes = File.GetAttributes(fileInfo.FullName);
             if ((attributes & FileAttributes.ReadOnly) != 0)
             {
-                return true;
-                Console.WriteLine("File has read-only permission.");
+                throw new UnauthorizedAccessException("File has read-only permission.");
             }
             else
             {

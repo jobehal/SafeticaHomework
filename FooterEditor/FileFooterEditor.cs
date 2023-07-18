@@ -1,12 +1,16 @@
 ﻿using FooterEditor;
 public class FileFooterEditor : IFileFooterEditor
 {
+    //
+    // Defult Values
+    //
     private int footerMaxLenght = 1024;
     private string footerHeadTag = "[SafeticaProperties]";
 
     private IFileHandler reader;
-    private string actionName;
+    private string method;
     private string[] propValPair;
+    
     private string Property 
     { 
         get
@@ -16,8 +20,7 @@ public class FileFooterEditor : IFileFooterEditor
                 return propValPair[0];
             }
             else
-            {
-                Console.WriteLine("No property defined");
+            {   
                 return null;
             }
         }
@@ -33,21 +36,51 @@ public class FileFooterEditor : IFileFooterEditor
             }
             else
             {
-                Console.WriteLine("No value defined");
-                return null;
+                throw new ArgumentException($"Property {propValPair[0]} does not hav value");
             }
         }
     }
-
+    //  
+    //  CTOR  
+    //  
     public FileFooterEditor(string fileName)
     {
             reader = new FileHandler(fileName);
-
     }  
-    
-    private void CallAction(IFooter footer) 
+            
+    public void Execute(string method, string propValPair)
+    {
+        // Set Parameters
+        this.method = method;
+        this.propValPair = propValPair.Split("=");
+
+        // Get Footer string
+        string endBytes = reader.ReadFromEnd(footerMaxLenght);
+
+        Tuple<int, string> splited = reader.SplitBySubstring(endBytes, footerHeadTag);
+        int startIndex = splited.Item1;
+        string footerString = splited.Item2;
+        
+        // Modify Footer
+        IFooter footer = new Footer(footerString, footerHeadTag);
+        CallMethod(footer);
+
+        // Write Footer
+        string modified = footer.ToString();
+        if (modified.Length <= footerMaxLenght)
+        {
+            reader.WriteToEnd(modified, startIndex);
+        }
+        else
+        {
+            throw new ArgumentException("Footer is too long. No change will be made");
+        }
+        Console.WriteLine($"Method {method} finished properly.");
+    }
+
+    private void CallMethod(IFooter footer) 
     { 
-        switch (actionName.ToLower())
+        switch (method.ToLower())
         {
             case "add":
                 footer.AddProperty(Property, Value);
@@ -63,32 +96,5 @@ public class FileFooterEditor : IFileFooterEditor
                 break;
         }
     }
-        
-    public void Execute(string actionName, string propValPair)
-    {
-        //set parameters
-        this.actionName = actionName;
-        this.propValPair = propValPair.Split("=");
-
-        string endBytes = reader.ReadFromEnd(footerMaxLenght);
-
-        Tuple<int, string> splited = reader.SplitBySubstring(endBytes, footerHeadTag);
-        int startIndex = splited.Item1;
-        string footerString = splited.Item2;
-        
-        IFooter footer = new Footer(footerString, footerHeadTag);
-        CallAction(footer);
-
-        string modified = footer.ToString();
-        if (modified.Length <= footerMaxLenght)
-        {
-            reader.WriteToEnd(modified, startIndex);
-        }
-        else
-        {
-            throw new ArgumentException("Footer is too long. No change will be made");
-        }
-    }
-
 }
 

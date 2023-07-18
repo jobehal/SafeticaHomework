@@ -11,10 +11,10 @@ namespace Test_FooterEditor
         private const string longExpected_edit               = "[SafeticaProperties]\nproperty1=edited\nproperty2=value2";
         private const string longExpected_remove_nonExisting = "[SafeticaProperties]\nproperty1=value1\nproperty2=value2";
         private const string longExpected_remove_exising     = "[SafeticaProperties]\nproperty2=value2";
-        private const int longBytesLength_add = 68;
-        private const int longBytesLength_edit = 54;
-        private const int longBytesLength_remove_existing = 37;
-        private const int longBytesLength_remove_nonexisting = 54;
+        private const int    longBytesLength_add = 68;
+        private const int    longBytesLength_edit = 54;
+        private const int    longBytesLength_remove_existing = 37;
+        private const int    longBytesLength_remove_nonexisting = 54;
         
         
         private const string emptyExpected_add = "﻿[SafeticaProperties]\naddedProp=123";
@@ -77,6 +77,7 @@ namespace Test_FooterEditor
         [InlineData(longExpected_remove_exising, longBytesLength_remove_existing, FileHandlerTestInputs.longFile)]
         [InlineData(longExpected_remove_exising, longBytesLength_remove_existing, FileHandlerTestInputs.shortFile)]
         [InlineData(longExpected_remove_exising, longBytesLength_remove_existing, FileHandlerTestInputs.hiddenFile)]
+        
         public void RemoveExistingProp(string expected, int bytesLength, string inputFile)
         {
             FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(inputFile));
@@ -113,5 +114,29 @@ namespace Test_FooterEditor
             FileFooterEditor footerEditor = new FileFooterEditor(originalFile.FullName);
             Assert.Throws<ArgumentException>(() => footerEditor.Execute("nonExisting", "nonExisting"));
         }
+    
+        [Theory]    
+        [InlineData("add")]
+        [InlineData("edit")]
+        public void NotDefinedValueThrowException(string method)
+        {
+            FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.longFile));
+
+            FileFooterEditor footerEditor = new FileFooterEditor(originalFile.FullName);
+            Assert.Throws<ArgumentException>(() => footerEditor.Execute(method, "onlyProp"));
+        }
+
+        [Fact]
+        public void WriteOversizedFooter()
+        {
+            FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.longFile));
+
+            FileFooterEditor footerEditor = new FileFooterEditor(originalFile.FullName);
+            string longProp = new string('a', 1024);
+
+            Assert.Throws<ArgumentException>(() => footerEditor.Execute("add", $"long={longProp}"));
+
+        }
+
     }
 }
