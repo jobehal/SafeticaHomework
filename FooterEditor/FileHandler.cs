@@ -5,19 +5,21 @@ namespace FooterEditor
     public class FileHandler : IFileHandler
     {
         private FileInfo _fileInfo;
-        
+        private bool CanAccessFile { get => _fileInfo.Exists && !_fileInfo.IsReadOnly() && !_fileInfo.IsLocked(); }
+        //  
+        //  CTOR  
+        //  
+
         public FileHandler(string filePath)
         {
-            var tempInfo = new FileInfo(filePath);
-            
-            //TODO check folde path not contains forrbide signs                        
-            //bool containsInvalidChars = (!string.IsNullOrEmpty(dir) && dir.IndexOfAny(Path.GetInvalidPathChars()) >= 0);
+            FileInfo tempInfo = new FileInfo(filePath);
             bool nameContainsInvalid = (!string.IsNullOrEmpty(tempInfo.Name) && tempInfo.Name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0);
 
             if (string.IsNullOrWhiteSpace(filePath) || nameContainsInvalid)
             {
                 throw new ArgumentException($"Inserted file path {filePath} is invalid.");
             }
+
             string fileInfoPath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(Directory.GetCurrentDirectory(), filePath);                
             _fileInfo = new FileInfo(fileInfoPath);
         }
@@ -61,22 +63,7 @@ namespace FooterEditor
                     }
                     return GetString(buffer);
                 }
-
             }
-        }
-
-
-        private string GetString(byte[] bytes)
-        {
-            string text = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-            return text;
-        }
-
-        
-        private byte[] GetBytes(string text)
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes(text);
-            return bytes;
         }
         
         public Tuple<int, string> SplitBySubstring(string inputString, string searchTag)
@@ -104,19 +91,30 @@ namespace FooterEditor
             {
                 throw new IOException($"Unable to write to the file {_fileInfo.FullName}.\n No changes would be made.");                
             }
+            
+            // Write to the end if the start pos is not fall into file
             startPossition = _fileInfo.Length <= startPossition ? 0 : startPossition;
+            
             using (FileStream fs = new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.Write, FileShare.None))
             {
                 byte[] bytesToWrite = GetBytes(content);
                 
                 fs.SetLength(_fileInfo.Length - startPossition);
-                fs.Seek(0, SeekOrigin.End);
-                
+                fs.Seek(0, SeekOrigin.End);                
                 fs.Write(bytesToWrite, 0, bytesToWrite.Length);
             }
         }
 
-        private bool CanAccessFile { get=> _fileInfo.Exists && !_fileInfo.IsReadOnly() && !_fileInfo.IsLocked(); }
-
+        private string GetString(byte[] bytes)
+        {
+            string text = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+            return text;
+        }
+        
+        private byte[] GetBytes(string text)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(text);
+            return bytes;
+        }
     }
 }

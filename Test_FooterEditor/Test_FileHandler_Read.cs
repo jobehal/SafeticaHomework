@@ -1,4 +1,5 @@
 ﻿using FooterEditor;
+using System;
 using System.IO;
 using System.Threading;
 using Xunit;
@@ -45,11 +46,18 @@ namespace Test_FooterEditor
 
         [Theory]
         [InlineData(FileHandlerTestInputs.readOnlyFile)]
-        [InlineData(FileHandlerTestInputs.nonExistingFile)]
         [InlineData(FileHandlerTestInputs.lockedFile)]        
         public void ReadUnaccesableFiles(string fileName)
         {
             var reader = new FileHandler(FileHandlerTestInputs.GetFilePath(fileName));
+
+            Assert.Throws<UnauthorizedAccessException>  (() => reader.ReadFromEnd(1024));
+        }
+
+        [Fact]
+        public void NonExistingFile()
+        {
+            var reader = new FileHandler(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.nonExistingFile));
 
             Assert.Throws<IOException>(() => reader.ReadFromEnd(1024));
         }

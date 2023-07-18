@@ -1,4 +1,5 @@
 ﻿using FooterEditor;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -11,16 +12,24 @@ namespace Test_FooterEditor
     {   
         [Theory]
         [InlineData(FileHandlerTestInputs.readOnlyFile)]
-        [InlineData(FileHandlerTestInputs.nonExistingFile)]
         [InlineData(FileHandlerTestInputs.lockedFile)]
         public void WriteUnaccesableFiles(string fileName)
         {
             var filePath = new FileInfo(FileHandlerTestInputs.GetFilePath(fileName));            
             FileHandler reader = new FileHandler(filePath.FullName);
 
-            Assert.Throws<IOException>(() => reader.WriteToEnd("123456", 0));            
+            Assert.Throws<UnauthorizedAccessException>(() => reader.WriteToEnd("123456", 0));            
         }
+        
+        [Fact]
+        public void WriteToNonExistingFiles()
+        {
+            var filePath = new FileInfo(FileHandlerTestInputs.GetFilePath(FileHandlerTestInputs.nonExistingFile));
+            FileHandler reader = new FileHandler(filePath.FullName);
 
+            Assert.Throws<IOException>(() => reader.WriteToEnd("123456", 0));
+        }
+        
         [Theory]
         [InlineData(FileHandlerTestInputs.longFile)]
         [InlineData(FileHandlerTestInputs.shortFile)]
@@ -39,6 +48,29 @@ namespace Test_FooterEditor
             string fileEndText = FileHandlerTestInputs.ReadFileEnd(newFile.FullName, newText.Length);
             Assert.Equal(newText, fileEndText);
             Assert.Equal(originalFile.Length + newText.Length, newFile.Length);
+        }
+
+        [Theory]
+        [InlineData(FileHandlerTestInputs.longFile, 0)]
+        [InlineData(FileHandlerTestInputs.longFile, 200)]
+        [InlineData(FileHandlerTestInputs.shortFile, 200)]
+        public void WriteEmptyFooter(string fileName, int writePossition)
+        {
+            FileInfo originalFile = new FileInfo(FileHandlerTestInputs.GetFilePath(fileName));
+            FileInfo newFile = originalFile.CopyTo(originalFile.FullName.Replace(".txt", "_noFooter.txt"), true);
+            string newText = "";
+            long expecteLength = originalFile.Length>writePossition ? originalFile.Length - writePossition : originalFile.Length;
+
+            var reader = new FileHandler(newFile.FullName);           
+            reader.WriteToEnd(newText, writePossition);
+
+            Thread.Sleep(5);
+            string fileEndText = FileHandlerTestInputs.ReadFileEnd(newFile.FullName, newText.Length);
+
+
+            Assert.Equal(newText, fileEndText);
+            Assert.Equal(expecteLength, newFile.Length);
+
         }
 
         [Theory]
@@ -70,6 +102,7 @@ namespace Test_FooterEditor
             Assert.Equal(newText, fileEndText);
             Assert.Equal(expectdLength, newFile.Length);
         }
+        
         [Fact]
         public void ReadFileLockedByAnotherProcess()
         {
