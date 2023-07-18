@@ -1,6 +1,8 @@
 using Xunit;
 using FooterEditor;
 using System;
+using System.IO;
+using System.Linq;
 
 namespace Test_FooterEditor
 {
@@ -10,23 +12,15 @@ namespace Test_FooterEditor
         [Theory]
         [InlineData(FooterInputs.noHeadInput)]
         [InlineData(FooterInputs.wrongHeadInput)]
-        public void CorruptedHeadRaisException(string input)
-        {
+        [InlineData(FooterInputs.corruptedPropsInput)]        
+        [InlineData(FooterInputs.corruptedOnlyValInput)]
+        public void CorruptedRaisException(string input)
+        {            
             Assert.Throws<ArgumentException>(() => new Footer(input, FooterInputs.headTag));
         }
-        
-        // [Theory]
-        // [InlineData(null)]
-        // [InlineData("")]
-        // [InlineData("  ")]
-        // public void NullOrEmptyInputRiseException(string input)
-        // {
-        //     Assert.Throws<ArgumentNullException>(() => new Footer(input, FooterInputs.headTag));
-        // }
 
         [Theory]
         [InlineData(FooterInputs.correctInput)]
-        [InlineData(FooterInputs.corruptedPropsInput)]
         public void NotNullAfterCorrectInput(string input)
         {            
             Footer footer = new Footer(input, FooterInputs.headTag);

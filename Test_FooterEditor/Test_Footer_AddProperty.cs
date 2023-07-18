@@ -2,6 +2,7 @@
 using FooterEditor;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Test_FooterEditor
 {
@@ -11,8 +12,6 @@ namespace Test_FooterEditor
         {
             yield return new object[] { FooterInputs.correctProps,          FooterInputs.correctInput };
             yield return new object[] { FooterInputs.duplicateProps,        FooterInputs.duplicatePropsInput };
-            yield return new object[] { FooterInputs.corruptedProps,        FooterInputs.corruptedPropsInput };
-            yield return new object[] { FooterInputs.corruptedOnlyValProps, FooterInputs.corruptedOnlyValInput };
             yield return new object[] { FooterInputs.emptyProps,            FooterInputs.emptyPropInput };
         }        
         [Theory]
@@ -55,9 +54,8 @@ namespace Test_FooterEditor
         public void AddExistingOrEmptyProperty(string propName)
         {
             Footer footer = new Footer(FooterInputs.correctInput, FooterInputs.headTag);
-                        
-            footer.AddProperty(propName, "newValue");
 
+            Assert.Throws<ArgumentException>(() => footer.AddProperty(propName, "newValue"));
             Assert.Equal(FooterInputs.correctProps, footer.Properties);
         }
     }
